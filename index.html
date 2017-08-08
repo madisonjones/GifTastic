@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Clemson Gifs!</title>
+
+<style>
+.thing {
+	border-radius: 5px;
+	padding: 5px;
+	background-color: purple;
+	color: white;
+
+}
+
+img {
+	float: left;
+	margin: 10px;
+}
+
+p {
+	float: left;
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="buttons-view"></div>
+
+    <form id="button-form">
+      <label for="button-input">Add a Clemson button!</label>
+      <input type="text" id="button-input"><br>
+
+      <input id="add-button" type="submit" value="Add a Clemson Button">
+    </form>
+
+  <div id="gifs-appear-here">
+  </div>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+var elements = ["Tiger", "Clemson", "Dabo Swinney", "DeShaun Watson", "Tillman Hall", "Death Valley Clemson", "Lake Hartwell"]
+
+var renderButtons = function() {
+        $("#buttons-view").empty();
+        for (var i = 0; i < elements.length; i++) {
+          var a = $("<button>");
+          a.addClass("object");
+          a.attr("data-name", elements[i]);
+          a.text(elements[i]);
+          $("#buttons-view").append(a);
+        }
+      }
+
+      $("#add-button").on("click", function(event) {
+        event.preventDefault();
+        var gifSearch = $("#button-input").val().trim();
+
+        elements.push(gifSearch);
+        gifSearch.attr("data-name", gifSearch)
+        renderButtons();
+
+      });
+
+renderButtons()
+
+
+ $("button").on("click", function(event){
+      var element = $(this).attr("data-name");
+      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+        element + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).done(function(response) {
+
+       console.log(response);
+
+var results = response.data
+console.log(results)
+
+for (var i = 0; i < results.length; i++) {
+        var p = $("<p>").text(results[i].rating)
+        var clemsonImage = $("<img>")
+        clemsonImage.attr("src", results[i].images.fixed_height.url)
+
+       $("#gifs-appear-here").prepend("<div id='clemsonDiv'></div>")
+       $("#clemsonDiv").append(p)
+       $("#clemsonDiv").append(clemsonImage)
+
+       }
+
+      });
+    });
+
+
+
+
+  </script>
+	
+</body>
+</html>
